@@ -1,0 +1,4 @@
+.vscode/
+*/target/
+vm/src/main/webapp/VAADIN/
+gtm/src/main/models/*.xml
