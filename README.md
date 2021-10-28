@@ -10,8 +10,8 @@
 - [x]  Only managers of an event can edit the core information with the exception of the owner who cannot be changed but only set initially
 
 ### Attendants
-- [ ] For public events, users can see who is attending them and who is managing them.
-- [ ] For private events, only attendants and those who have an invitation pending can read that information.
+- [x] For public events, users can see who is attending them and who is managing them.
+- [x] For private events, only attendants and those who have an invitation pending can read that information.
 - [ ] Only the owner can promote attendants to managers and demote managers to attendants.
 - [ ] Managers can remove attendants from the event, but only if the attendant is not a manager.
 - [ ] They also can add those who requested to join an event as attendants.

@@ -18,6 +18,8 @@ role FREEUSER {
     update(private) constrainedBy [self.private = null and not value]
 
     read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
+    read(managedBy), read(attendants) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
+
     update(title), update(description), update(location), update(date) constrainedBy [self.managedBy->includes(caller)]
     add(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->excludes(target)]
     remove(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->includes(target)]
