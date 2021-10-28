@@ -1,9 +1,15 @@
 role NONE {}
 
-role FREEUSER {}
+role FREEUSER {
+  Person {
+    add(events) constrainedBy [not target.private]
+  }
+  Event {
+    create constrainedBy [self.owner = caller and not self.private and self.managedBy->includes(self.owner) and self.attendants->excludesAll(self.managedBy)]
+  }
+}
 
 role PREMIUMUSER extends FREEUSER {
-
 }
 
 role MODERATOR extends MODERATOR {
