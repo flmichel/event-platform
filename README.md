@@ -7,8 +7,7 @@
 - [x] Users (i.e., anyone who is logged in) can create public events.
 - [x] Everyone (i.e., also users who are not logged in) can read a public event’s core information (title, description, location, date, owner) and any event’s categories
 - [x] For private events, only its attendants and users invited to the event can read that information.
-- [ ]  Only managers of an event can edit the core information
-with the exception of the owner who cannot be changed but only set initially
+- [x]  Only managers of an event can edit the core information with the exception of the owner who cannot be changed but only set initially
 
 ### Attendants
 - [ ] For public events, users can see who is attending them and who is managing them.

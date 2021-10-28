@@ -9,8 +9,9 @@ role FREEUSER {
     add(events) constrainedBy [not target.private]
   }
   Event {
-    create constrainedBy [self.owner = caller and not self.private and self.managedBy->includes(self.owner) and self.attendants->excludesAll(self.managedBy)]
+    create constrainedBy [self.owner = caller and not self.private and self.managedBy->includes(self.owner) and self.attendants->includes(self.managedBy)]
     read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
+    update(title), update(description), update(location), update(date), update(categories) constrainedBy [self.managedBy->includes(caller)]
   }
 }
 
