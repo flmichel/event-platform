@@ -6,10 +6,17 @@ role NONE {
 
 role FREEUSER {
   Person {
-    add(events) constrainedBy [not target.private and target.owner = caller and target.managedBy->includes(target.owner) and target.attendants->includesAll(target.managedBy)]
+    add(events) constrainedBy [target.owner = null and self = caller]
+    add(manages) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
+    add(attends) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
   }
   Event {
     create
+    update(owner) constrainedBy [self.owner = null and value = caller]
+    add(managedBy) constrainedBy [self.owner = caller and target = self.owner] // or ...
+    add(attendants) constrainedBy [self.owner = caller and target = self.owner] // or ...
+    update(private) constrainedBy [self.private = null and not value]
+
     read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
     update(title), update(description), update(location), update(date) constrainedBy [self.managedBy->includes(caller)]
     add(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->excludes(target)]
