@@ -2,11 +2,17 @@ role NONE {}
 
 role FREEUSER {}
 
-role PREMIUMUSER {}
+role PREMIUMUSER extends FREEUSER {
 
-role MODERATOR {}
+}
 
-role ADMIN {}
+role MODERATOR extends MODERATOR {
+
+}
+
+role ADMIN extends MODERATOR {
+
+}
 
 // The SYSTEM role is required for test data setup
 role SYSTEM {

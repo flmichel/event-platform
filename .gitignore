@@ -2,3 +2,10 @@
 */target/
 vm/src/main/webapp/VAADIN/
 gtm/src/main/models/*.xml
+
+*.project
+*.settings/
+vm/.classpath
+
+# different configuration with docker
+vm/src/test/resources/jetty/jetty-env.xml
