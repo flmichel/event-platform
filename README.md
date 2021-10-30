@@ -19,11 +19,11 @@
 - [ ] Everyone can add themselves as attendant to a public event, if they have been invited.
 
 ### Invitations & Requests
-- [ ] Everyone can request to join a public event and
+- [x] Everyone can request to join a public event and
 cancel their requests.
-- [ ] Only event managers can invite users to events they manage, cancel invitations, and accept and deny request.
-- [ ] An invited user can accept or decline the invitation (in both cases, the invitation is deleted). Managers can see all invitations and requests for the respective event.
-- [ ] Invitations are read-only, i.e., once they have been assigned, the values of invitee, invitedBy, and event cannot be changed.
+- [x] Only event managers can invite users to events they manage, cancel invitations, and accept and deny request.
+- [x] An invited user can accept or decline the invitation (in both cases, the invitation is deleted). Managers can see all invitations and requests for the respective event.
+- [x] Invitations are read-only, i.e., once they have been assigned, the values of invitee, invitedBy, and event cannot be changed.
 
 ### Message Board
 - [ ] Only attendants can see an event’s message board, read a post’s core information (author, content, postedAt), and post to the event’s message board.
@@ -36,7 +36,7 @@ cancel their requests.
 - [ ] Anyone who can read a post’s content, can flag it for review.
 - [ ] When a post is reviewed positively, its
 flag is cleared.
-- [ ] If a post is reviewed negatively, its flag is cleared and the post is locked. 
+- [ ] If a post is reviewed negatively, its flag is cleared and the post is locked.
 - [ ] Those who can review a post can see whether it has been flagged and read its content and author.
 - [ ] A post’s lock, and all information of locked
 posts can only be read by those who can review the respective post.
@@ -49,7 +49,7 @@ posts can only be read by those who can review the respective post.
 - [ ] The categories moderated by a user can be seen by everyone.
 
 ### Categories
-- [ ] Users can see who moderates a category. 
+- [ ] Users can see who moderates a category.
 - [ ] Moderators can decide to remove themselves as the moderator of a category.
 - [ ] Categories can be seen and their name, events and moderators can be read by everyone, but only moderators of a category can see its subscribers.
 

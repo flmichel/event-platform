@@ -1,14 +1,32 @@
 role NONE {
     Event {
       read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private]
-  }
+
+      //3.1
+      add(requesters) constrainedBy [target = caller and not self.private]
+      remove(requesters) constrainedBy [target = caller and self.requesters->includes(target)]
+    }
+    Person {
+      //3.1
+      add(requests) constrainedBy [self = caller and not target.private]
+      remove(requests) constrainedBy [self = caller and self.requests->includes(target)]
+    }
+
 }
 
-role FREEUSER {
+role FREEUSER extends NONE {
+
   Person {
     add(events) constrainedBy [target.owner = null and self = caller]
     add(manages) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
     add(attends) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
+
+    //3.2
+    remove(requests) constrainedBy [target.managedBy->includes(caller)]
+    add(invitations), add(invites), remove(invites) constrainedBy [target.event.managedBy->includes(caller)]
+    //3.2 + 3.3
+    remove(invitations) constrainedBy[target.event.managedBy->includes(caller) or target.invitee = caller]
+
   }
   Event {
     create
@@ -21,11 +39,27 @@ role FREEUSER {
     update(title), update(description), update(location), update(date) constrainedBy [self.managedBy->includes(caller)]
     add(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->excludes(target)]
     remove(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->includes(target)]
+
+    //3.2
+    add(invitations), remove(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self]
+    //3.2+3.3
+    remove(requesters), read(requesters), read(invitations) constrainedBy [self.managedBy->includes(caller)]
+
   }
   Category {
     add(events) constrainedBy [target.managedBy->includes(caller) and self.events->excludes(target)]
     remove(events) constrainedBy [target.managedBy->includes(caller) and self.events->includes(target)]
   }
+
+  Invite {
+    //3.2 + 3.4
+    create constrainedBy [not caller.manages->isEmpty()]
+    update(invitee) constrainedBy [self.invitee = null]// and not value.role = Role.NONE]
+    update(invitedBy) constrainedBy [self.invitedBy = null and value = caller]
+    update(event) constrainedBy [self.event = null and value.managedBy->includes(caller)]
+    delete constrainedBy [self.event = null or self.event.managedBy->includes(caller)]
+  }
+
 }
 
 role PREMIUMUSER extends FREEUSER {
