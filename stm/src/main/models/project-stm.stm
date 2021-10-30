@@ -53,9 +53,9 @@ role FREEUSER extends NONE {
 
   Invite {
     //3.2 + 3.4
-    create constrainedBy [not caller.manages->isEmpty()]
-    update(invitee) constrainedBy [self.invitee = null]// and not value.role = Role.NONE]
-    update(invitedBy) constrainedBy [self.invitedBy = null and value = caller]
+    create
+    update(invitee) constrainedBy [self.invitee = null and self.event.managedBy->includes(caller) and value.role = Role.FREEUSER]
+    update(invitedBy) constrainedBy [self.invitedBy = null self.event.managedBy->includes(caller) and value = caller]
     update(event) constrainedBy [self.event = null and value.managedBy->includes(caller)]
     delete constrainedBy [self.event = null or self.event.managedBy->includes(caller)]
   }
