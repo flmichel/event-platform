@@ -16,7 +16,7 @@ role FREEUSER {
   Person {
     add(events) constrainedBy [target.owner = null and self = caller]
     add(manages) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
-    add(attends) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
+    add(attends) constrainedBy [(self.events->includes(target) and self = target.owner) or self.invitations->exists(i|i.invitee = caller and self=caller and i.event=target)]
 
     //3.2
     add(invitations), add(invites), remove(invites) constrainedBy [target.event.managedBy->includes(caller)]
@@ -41,7 +41,7 @@ role FREEUSER {
     create
     update(owner) constrainedBy [self.owner = null and value = caller]
     add(managedBy) constrainedBy [self.owner = caller and target = self.owner] // or ...
-    add(attendants) constrainedBy [self.owner = caller and target = self.owner] // or ...
+    add(attendants) constrainedBy [(self.owner = caller and target = self.owner) or self.invitations->exists(i|i.invitee=target and i.event = self and target=caller)] // or ...
     update(private) constrainedBy [self.private = null and not value]
 
     read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
@@ -53,7 +53,8 @@ role FREEUSER {
     add(requesters) constrainedBy [target = caller and not self.private]
     remove(requesters) constrainedBy [(target = caller and self.requesters->includes(target)) or self.managedBy->includes(caller)]
     //3.2
-    add(invitations), remove(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self]
+    add(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self]
+    remove(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self or target.invitee = caller]
     //3.2+3.3
     read(requesters), read(invitations) constrainedBy [self.managedBy->includes(caller)]
 
@@ -75,7 +76,9 @@ role FREEUSER {
     update(invitee) constrainedBy [self.invitee = null and self.event.managedBy->includes(caller) and value.role = Role::FREEUSER]
     update(invitedBy) constrainedBy [self.invitedBy = null and self.event.managedBy->includes(caller) and value = caller]
     update(event) constrainedBy [self.event = null and value.managedBy->includes(caller)]
-    delete constrainedBy [self.event = null or self.event.managedBy->includes(caller)]
+    read(event) constrainedBy [self.invitee = caller or self.event.managedBy->includes(caller)]
+    delete constrainedBy [self.event.managedBy->includes(caller) or self.invitee = caller]
+
   }
 
   Post {

@@ -26,9 +26,9 @@ cancel their requests.
 - [x] Invitations are read-only, i.e., once they have been assigned, the values of invitee, invitedBy, and event cannot be changed.
 
 ### Message Board
-- [ ] Only attendants can see an event’s message board, read a post’s core information (author, content, postedAt), and post to the event’s message board.
-- [ ] Managers and the authors can remove posts.
-- [ ] The author, event, and content of a post can only be set initially.
+- [x] Only attendants can see an event’s message board, read a post’s core information (author, content, postedAt), and post to the event’s message board.
+- [x] Managers and the authors can remove posts.
+- [x] The author, event, and content of a post can only be set initially.
 - [ ] Managers can review posts of events they manage.
 
 ### Review Process
@@ -43,10 +43,10 @@ posts can only be read by those who can review the respective post.
 - [ ] Locked posts cannot be deleted.
 
 ### Persons
-- [ ] Users can see any other user’s core information (name, surname, username, role).
-- [ ] Users can edit their password, and their own core information except their role.
-- [ ] Each user can see the events they own, manage, attend, or requested access to, the posts they authored, the categories they subscribed to, and the invitations they received or sent.
-- [ ] The categories moderated by a user can be seen by everyone.
+- [x] Users can see any other user’s core information (name, surname, username, role).
+- [x] Users can edit their password, and their own core information except their role.
+- [x] Each user can see the events they own, manage, attend, or requested access to, the posts they authored, the categories they subscribed to, and the invitations they received or sent.
+- [x] The categories moderated by a user can be seen by everyone.
 
 ### Categories
 - [ ] Users can see who moderates a category.
