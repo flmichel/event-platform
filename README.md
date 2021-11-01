@@ -7,13 +7,13 @@
 - [x] Users (i.e., anyone who is logged in) can create public events.
 - [x] Everyone (i.e., also users who are not logged in) can read a public event’s core information (title, description, location, date, owner) and any event’s categories
 - [x] For private events, only its attendants and users invited to the event can read that information.
-- [x]  Only managers of an event can edit the core information with the exception of the owner who cannot be changed but only set initially
+- [x] Only managers of an event can edit the core information with the exception of the owner who cannot be changed but only set initially
 
 ### Attendants
 - [x] For public events, users can see who is attending them and who is managing them.
 - [x] For private events, only attendants and those who have an invitation pending can read that information.
-- [ ] Only the owner can promote attendants to managers and demote managers to attendants.
-- [ ] Managers can remove attendants from the event, but only if the attendant is not a manager.
+- [x] Only the owner can promote attendants to managers and demote managers to attendants.
+- [x] Managers can remove attendants from the event, but only if the attendant is not a manager.
 - [ ] They also can add those who requested to join an event as attendants.
 - [ ] Everyone besides the owner can remove themselves from attending the event.
 - [ ] Everyone can add themselves as attendant to a public event, if they have been invited.

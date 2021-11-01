@@ -7,14 +7,22 @@ role NONE {
 role FREEUSER {
   Person {
     add(events) constrainedBy [target.owner = null and self = caller]
-    add(manages) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
-    add(attends) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
+
+    add(manages) constrainedBy [target.owner = caller and (self.events->includes(target) or (self.manages->excludes(target) and self.attends->includes(target)))] // or ...
+    remove(manages) constrainedBy [target.owner = caller and self.manages->includes(target)]
+
+    add(attends) constrainedBy [target.owner = caller and self.events->includes(target)] // or ...
+    remove(attends) constrainedBy [caller.manages->includes(target) and self.manages->excludes(target) and self.attends->includes(target)]
   }
   Event {
     create
     update(owner) constrainedBy [self.owner = null and value = caller]
-    add(managedBy) constrainedBy [self.owner = caller and target = self.owner] // or ...
+
+    add(managedBy) constrainedBy [self.owner = caller and (target = self.owner or (self.managedBy->excludes(target) and self.attendants->includes(target)))]
+    remove(managedBy) constrainedBy [self.owner = caller and self.managedBy->includes(target)]
+
     add(attendants) constrainedBy [self.owner = caller and target = self.owner] // or ...
+    remove(attends) constrainedBy [self.managedBy->includes(caller) and self.managedBy->excludes(target) and self.attendants->includes(target)]
     update(private) constrainedBy [self.private = null and not value]
 
     read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
