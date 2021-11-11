@@ -15,8 +15,8 @@
 - [x] Only the owner can promote attendants to managers and demote managers to attendants.
 - [x] Managers can remove attendants from the event, but only if the attendant is not a manager.
 - [ ] They also can add those who requested to join an event as attendants.
-- [ ] Everyone besides the owner can remove themselves from attending the event.
-- [ ] Everyone can add themselves as attendant to a public event, if they have been invited.
+- [x] Everyone besides the owner can remove themselves from attending the event.
+- [x] Everyone can add themselves as attendant to a public event, if they have been invited.
 
 ### Invitations & Requests
 - [x] Everyone can request to join a public event and
