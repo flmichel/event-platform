@@ -1,12 +1,110 @@
-role NONE {}
-
-role FREEUSER {}
-
-role PREMIUMUSER extends FREEUSER {
+role NONE {
+    Event {
+      read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private]
+    }
+    Person{
+      create
+      update(role) constrainedBy [self.role=null and value = Role::FREEUSER]
+      update(username), update(password)
+      read(username), read(password), read(role) constrainedBy[caller=null]
+    }
 
 }
 
-role MODERATOR extends MODERATOR {
+role FREEUSER {
+
+  Person {
+    add(events) constrainedBy [target.owner = null and self = caller]
+    add(manages) constrainedBy [self.events->includes(target) and self = target.owner] // or ...
+    add(attends) constrainedBy [(self.events->includes(target) and self = target.owner) or self.invitations->exists(i|i.invitee = caller and self=caller and i.event=target)]
+
+    //3.2
+    add(invitations), add(invites), remove(invites) constrainedBy [target.event.managedBy->includes(caller)]
+    //3.2 + 3.3
+    remove(invitations) constrainedBy[target.event.managedBy->includes(caller) or target.invitee = caller]
+
+    //3.1+3.2
+    add(requests) constrainedBy [self = caller and not target.private]
+    remove(requests) constrainedBy [(self = caller and self.requests->includes(target)) or target.managedBy->includes(caller)]
+
+    //6.1
+    read(name),read(surname),read(username),read(role)
+    //6.2
+    update(password), update(name), update(surname),update(username) constrainedBy [self = caller]
+    //6.3
+    read(events), read(manages), read(attends), read(requests), read(authored), read(subscriptions), read(invites), read(invitations) constrainedBy [self=caller]
+    //6.4
+    read(moderates)
+  }
+
+  Event {
+    create
+    update(owner) constrainedBy [self.owner = null and value = caller]
+    add(managedBy) constrainedBy [self.owner = caller and target = self.owner] // or ...
+    add(attendants) constrainedBy [(self.owner = caller and target = self.owner) or self.invitations->exists(i|i.invitee=target and i.event = self and target=caller)] // or ...
+    update(private) constrainedBy [self.private = null and not value]
+
+    read(title), read(description), read(location), read(date), read(owner), read(categories) constrainedBy [not self.private or self.attendants->includes(caller) or self.invitations.invitee->includes(caller)]
+    update(title), update(description), update(location), update(date) constrainedBy [self.managedBy->includes(caller)]
+    add(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->excludes(target)]
+    remove(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->includes(target)]
+
+    //3.1+3.2
+    add(requesters) constrainedBy [target = caller and not self.private]
+    remove(requesters) constrainedBy [(target = caller and self.requesters->includes(target)) or self.managedBy->includes(caller)]
+    //3.2
+    add(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self]
+    remove(invitations) constrainedBy [self.managedBy->includes(caller) and target.event = self or target.invitee = caller]
+    //3.2+3.3
+    read(requesters), read(invitations) constrainedBy [self.managedBy->includes(caller)]
+
+
+
+    //4.1
+    read(messageBoard), add(messageBoard) constrainedBy [self.attendants->includes(caller)]// and not target.locked]
+    //4.2
+    remove(messageBoard) constrainedBy [target.author = caller or self.managedBy->includes(caller)]
+  }
+  Category {
+    add(events) constrainedBy [target.managedBy->includes(caller) and self.events->excludes(target)]
+    remove(events) constrainedBy [target.managedBy->includes(caller) and self.events->includes(target)]
+  }
+
+  Invite {
+    //3.2 + 3.4
+    create
+    update(invitee) constrainedBy [self.invitee = null and self.event.managedBy->includes(caller) and value.role = Role::FREEUSER]
+    update(invitedBy) constrainedBy [self.invitedBy = null and self.event.managedBy->includes(caller) and value = caller]
+    update(event) constrainedBy [self.event = null and value.managedBy->includes(caller)]
+    read(event) constrainedBy [self.invitee = caller or self.event.managedBy->includes(caller)]
+    delete constrainedBy [self.event.managedBy->includes(caller) or self.invitee = caller]
+
+  }
+
+  Post {
+    create
+    //4.1
+    read(author),read(content) constrainedBy [self.postedAt.attendants->includes(caller) or self.postedAt.managedBy->includes(caller)]
+    read(postedAt) constrainedBy [self.postedAt.attendants->includes(caller) and self.locked = false]
+    //4.1+4.3
+    update(postedAt) constrainedBy [self.postedAt = null and value.attendants->includes(caller)]
+    //4.3
+    update(author) constrainedBy [self.author = null and value = caller]
+    update(content) constrainedBy [self.content = null]
+
+    //4.2
+    delete constrainedBy [(self.author = caller or self.postedAt.managedBy->includes(caller))]
+  }
+
+}
+
+role PREMIUMUSER extends FREEUSER {
+  Event{
+    update(private) constrainedBy [self.private = null]
+  }
+}
+
+role MODERATOR extends PREMIUMUSER {
 
 }
 
@@ -26,6 +124,9 @@ role SYSTEM {
     fullAccess
   }
   Invite {
+    fullAccess
+  }
+  Post {
     fullAccess
   }
 }
