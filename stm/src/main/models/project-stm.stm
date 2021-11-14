@@ -106,8 +106,8 @@ role FREEUSER {
     //4.1
     read(messageBoard) constrainedBy [self.attendants->includes(caller)]// and not target.locked]
     add(messageBoard) constrainedBy [target.postedAt = null and self.attendants->includes(caller)]
-    //4.2
-    remove(messageBoard) constrainedBy [target.author = caller or self.managedBy->includes(caller)]
+    //4.2+5.7
+    remove(messageBoard) constrainedBy [(target.author = caller or self.managedBy->includes(caller)) and not target.locked]
 
   }
   Category {
@@ -145,7 +145,7 @@ role FREEUSER {
     update(content) constrainedBy [self.content = null]
 
     //4.1+4.5+5.1+5.2
-    update(flagged) constrainedBy [(self.flagged = null and not value) or (self.postedAt.managedBy->includes(caller) and self.flagged) or (self.postedAt.attendants->includes(caller) and value and not self.locked)]
+    update(flagged) constrainedBy [(self.flagged = null and not value) or self.postedAt.managedBy->includes(caller) or (self.postedAt.attendants->includes(caller) and value and not self.locked)]
     
     //4.1+4.5+5.1
     update(locked) constrainedBy [(self.locked = null and not value) or (not self.locked and self.postedAt.managedBy->includes(caller))]
@@ -166,11 +166,37 @@ role PREMIUMUSER extends FREEUSER {
 }
 
 role MODERATOR extends PREMIUMUSER {
+  Event {
+    //10.1
+    read(messageBoard) constrainedBy [self.categories->union(caller.moderates)->notEmpty()]
+  }
 
+  Post {
+    //10.1+10.2
+    read(author),read(content),read(postedAt), read(flagged), read(locked), update(flagged) constrainedBy [self.postedAt.categories->union(caller.moderates)->notEmpty()]
+    
+    //10.2
+    update(locked) constrainedBy [not self.locked and self.postedAt.categories->union(caller.moderates)->notEmpty()]
+  }
 }
 
 role ADMIN extends MODERATOR {
+  Event {
+    //11.1
+    read(messageBoard) constrainedBy [self.categories->notEmpty()]
 
+    //11.3
+    remove(messageBoard) constrainedBy [target.locked]
+  }
+
+  Post {
+    //11.1+11.6
+    read(author),read(content),read(postedAt), read(flagged), read(locked), update(flagged)
+    //11.3
+    delete constrainedBy [self.locked]
+    //11.5+11.6
+    update(locked)
+  }
 }
 
 // The SYSTEM role is required for test data setup
