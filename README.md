@@ -14,7 +14,7 @@
 - [x] For private events, only attendants and those who have an invitation pending can read that information.
 - [x] Only the owner can promote attendants to managers and demote managers to attendants.
 - [x] Managers can remove attendants from the event, but only if the attendant is not a manager.
-- [ ] They also can add those who requested to join an event as attendants.
+- [x] They also can add those who requested to join an event as attendants.
 - [x] Everyone besides the owner can remove themselves from attending the event.
 - [x] Everyone can add themselves as attendant to a public event, if they have been invited.
 
@@ -29,18 +29,16 @@ cancel their requests.
 - [x] Only attendants can see an event’s message board, read a post’s core information (author, content, postedAt), and post to the event’s message board.
 - [x] Managers and the authors can remove posts.
 - [x] The author, event, and content of a post can only be set initially.
-- [ ] Managers can review posts of events they manage.
+- [x] Managers can review posts of events they manage.
 
 ### Review Process
-- [ ] Posts on an event can be reviewed.
-- [ ] Anyone who can read a post’s content, can flag it for review.
-- [ ] When a post is reviewed positively, its
-flag is cleared.
-- [ ] If a post is reviewed negatively, its flag is cleared and the post is locked.
-- [ ] Those who can review a post can see whether it has been flagged and read its content and author.
-- [ ] A post’s lock, and all information of locked
-posts can only be read by those who can review the respective post.
-- [ ] Locked posts cannot be deleted.
+- [x] Posts on an event can be reviewed.
+- [x] Anyone who can read a post’s content, can flag it for review.
+- [x] When a post is reviewed positively, its flag is cleared.
+- [x] If a post is reviewed negatively, its flag is cleared and the post is locked.
+- [x] Those who can review a post can see whether it has been flagged and read its content and author.
+- [x] A post’s lock, and all information of locked posts can only be read by those who can review the respective post.
+- [x] Locked posts cannot be deleted.
 
 ### Persons
 - [x] Users can see any other user’s core information (name, surname, username, role).
