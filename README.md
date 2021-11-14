@@ -54,9 +54,28 @@ cancel their requests.
 ## Role-Specific Permissions
 
 ### None Role
+- [ ] Users who are not logged in yet can register (create new persons), but only as free users.
+- [ ] When a new user registers, they only set their username and password.
+- [ ] Additionally, users who are not logged in yet, can log in.
+- [ ] For that, they need the permission to read usernames, passwords, and roles.
 
 ### Premium Users
+- [ ] They can subscribe to and unsubscribe from categories.
+- [ ] they can create private events
 
 ### Moderators
+For events in a category they moderate, moderators can do the following:
+- [ ] They can access posts as if they were an attendant
+- [ ] review posts
+- [ ] remove a category they moderate from an event
+- [ ] For every post, they can see at which event it was posted.
 
 ### Administrators
+- [ ] moderators of every category.
+- [ ] can delete users
+- [ ] can delete posts that have been locked
+- [ ] can also edit any users password and role.
+- [ ] only administrators can clear locks of posts.
+- [ ] can review all posts
+- [ ] can create and delete categories, edit their names, and remove any category from any event.
+- [ ] can add and remove users with the role moderator as moderators of categories.
