@@ -55,12 +55,15 @@ role FREEUSER {
     //6.2
     update(password), update(name), update(surname),update(username) constrainedBy [self = caller]
     //6.3
-    read(events), read(manages), read(attends), read(requests), read(authored), read(subscriptions), read(invites), read(invitations) constrainedBy [self=caller]
+    read(events), read(manages), read(attends), read(requests), read(authored), read(invites), read(invitations) constrainedBy [self=caller]
     //6.4
     read(moderates)
 
     //7.2
     remove(moderates) constrainedBy [self = caller]
+
+    //7.3
+    read(subscriptions) constrainedBy [self=caller]
 
   }
 
@@ -79,7 +82,8 @@ role FREEUSER {
 
 
     //1.1
-    update(private) constrainedBy [self.private = null and not value]
+    read(private)
+    update(private) constrainedBy [self.owner = caller and not value]
 
     //1.2+1.3
     read(categories)
@@ -91,8 +95,8 @@ role FREEUSER {
     //1.4
     update(title), update(description), update(location), update(date) constrainedBy [self.managedBy->includes(caller)]
 
-    add(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->excludes(target)]
-    remove(categories) constrainedBy [self.managedBy->includes(caller) and self.categories->includes(target)]
+    add(categories) constrainedBy [self.managedBy->includes(caller)]
+    remove(categories) constrainedBy [self.managedBy->includes(caller)]
 
     //3.1+3.2
     add(requesters) constrainedBy [target = caller and not self.private]
@@ -146,7 +150,7 @@ role FREEUSER {
 
     //4.1+4.5+5.1+5.2
     update(flagged) constrainedBy [(self.flagged = null and not value) or self.postedAt.managedBy->includes(caller) or (self.postedAt.attendants->includes(caller) and value and not self.locked)]
-    
+
     //4.1+4.5+5.1
     update(locked) constrainedBy [(self.locked = null and not value) or (not self.locked and self.postedAt.managedBy->includes(caller))]
 
@@ -161,22 +165,41 @@ role FREEUSER {
 
 role PREMIUMUSER extends FREEUSER {
   Event{
-    update(private) constrainedBy [self.private = null]
+    update(private) constrainedBy [self.owner = caller]
   }
+
+  Category{
+    add(subscribers) constrainedBy [target = caller]
+    remove(subscribers) constrainedBy [target = caller]
+  }
+
+  Person{
+    add(subscriptions) constrainedBy [self = caller]
+    remove(subscriptions) constrainedBy [self = caller]
+  }
+
 }
 
 role MODERATOR extends PREMIUMUSER {
   Event {
     //10.1
-    read(messageBoard) constrainedBy [self.categories->union(caller.moderates)->notEmpty()]
+    read(messageBoard) constrainedBy [self.categories->intersection(caller.moderates)->notEmpty()]
+
+    //10.3
+    remove(categories) constrainedBy [self.categories->intersection(caller.moderates)->notEmpty()]
+  }
+   //10.3
+  Category{
+    read(subscribers) constrainedBy [caller.moderates->includes(self)]
+    remove(events) constrainedBy [target.categories->intersection(caller.moderates)->notEmpty()]
   }
 
   Post {
-    //10.1+10.2
-    read(author),read(content),read(postedAt), read(flagged), read(locked), update(flagged) constrainedBy [self.postedAt.categories->union(caller.moderates)->notEmpty()]
-    
+    //10.1+10.2+10.4
+    read(author),read(content),read(postedAt), read(flagged), read(locked), update(flagged) constrainedBy [self.postedAt.categories->intersection(caller.moderates)->notEmpty()]
+
     //10.2
-    update(locked) constrainedBy [not self.locked and self.postedAt.categories->union(caller.moderates)->notEmpty()]
+    update(locked) constrainedBy [not self.locked and self.postedAt.categories->intersection(caller.moderates)->notEmpty()]
   }
 }
 
@@ -187,6 +210,10 @@ role ADMIN extends MODERATOR {
 
     //11.3
     remove(messageBoard) constrainedBy [target.locked]
+
+    //11.1
+    remove(categories)
+
   }
 
   Post {
@@ -196,6 +223,30 @@ role ADMIN extends MODERATOR {
     delete constrainedBy [self.locked]
     //11.5+11.6
     update(locked)
+  }
+
+  Category{
+    //11.1
+    remove(events)
+    //11.7
+    create
+    delete
+    update(name)
+    //7.3
+    read(subscribers)
+    //11.8
+    add(moderators) constrainedBy [target.role = Role::MODERATOR]
+    remove(moderators) constrainedBy [target.role = Role::MODERATOR]
+  }
+
+  Person{
+    //11.2
+    delete
+    //11.4
+    update(password), update(role)
+    //11.8
+    add(moderates) constrainedBy [self.role = Role::MODERATOR]
+    remove(moderates) constrainedBy [self.role = Role::MODERATOR]
   }
 }
 

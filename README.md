@@ -47,35 +47,35 @@ cancel their requests.
 - [x] The categories moderated by a user can be seen by everyone.
 
 ### Categories
-- [ ] Users can see who moderates a category.
-- [ ] Moderators can decide to remove themselves as the moderator of a category.
-- [ ] Categories can be seen and their name, events and moderators can be read by everyone, but only moderators of a category can see its subscribers.
+- [x] Users can see who moderates a category.
+- [x] Moderators can decide to remove themselves as the moderator of a category.
+- [x] Categories can be seen and their name, events and moderators can be read by everyone, but only moderators of a category can see its subscribers.
 
 ## Role-Specific Permissions
 
 ### None Role
-- [ ] Users who are not logged in yet can register (create new persons), but only as free users.
-- [ ] When a new user registers, they only set their username and password.
-- [ ] Additionally, users who are not logged in yet, can log in.
-- [ ] For that, they need the permission to read usernames, passwords, and roles.
+- [x] Users who are not logged in yet can register (create new persons), but only as free users.
+- [x] When a new user registers, they only set their username and password.
+- [x] Additionally, users who are not logged in yet, can log in.
+- [x] For that, they need the permission to read usernames, passwords, and roles.
 
 ### Premium Users
-- [ ] They can subscribe to and unsubscribe from categories.
-- [ ] they can create private events
+- [x] They can subscribe to and unsubscribe from categories.
+- [x] they can create private events
 
 ### Moderators
 For events in a category they moderate, moderators can do the following:
 - [x] They can access posts as if they were an attendant
 - [x] review posts
-- [ ] remove a category they moderate from an event
-- [ ] For every post, they can see at which event it was posted.
+- [x] remove a category they moderate from an event
+- [x] For every post, they can see at which event it was posted.
 
 ### Administrators
-- [ ] moderators of every category.
-- [ ] can delete users
+- [x] moderators of every category.
+- [x] can delete users
 - [x] can delete posts that have been locked
-- [ ] can also edit any users password and role.
+- [x] can also edit any users password and role.
 - [x] only administrators can clear locks of posts.
 - [x] can review all posts
-- [ ] can create and delete categories, edit their names, and remove any category from any event.
-- [ ] can add and remove users with the role moderator as moderators of categories.
+- [x] can create and delete categories, edit their names, and remove any category from any event.
+- [x] can add and remove users with the role moderator as moderators of categories.
